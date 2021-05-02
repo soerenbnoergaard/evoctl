@@ -78,7 +78,7 @@ Gui::Gui()
     int W = 480;
     int H = 320;
 
-    Fl_Window *window = new Fl_Window(W, H);
+    Fl_Window *window = new Fl_Window(W, H, "evoctl");
     window->begin();
 
     int x, y, m, b;

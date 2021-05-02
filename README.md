@@ -8,11 +8,11 @@ The goal of the project is to be able to control all the parameters which are no
 
 ## Project status
 
-Only the basic GUI has been built - no actual USB communication has been implemented yet. References
+Only the basic GUI has been built - no actual USB communication has been implemented yet. Have a look at the references below to get started.
 
 ## Screenshots
 
-N/A.
+![evoctl screenshot](https://raw.githubusercontent.com/soerenbnoergaard/evoctl/main/doc/screenshot1.png)
 
 ## Download
 
@@ -23,6 +23,7 @@ N/A.
 The following commands are used to build the project:
 
     git clone http://github.com/soerenbnoergaard/evoctl
+    cd evoctl
     git submodule init
     git submodule update
     make
