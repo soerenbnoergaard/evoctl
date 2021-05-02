@@ -139,7 +139,7 @@ void Gui::reset()
 
 void Gui::on_change(identifier_t id, Fl_Widget *o)
 {
-    static char label[10];
+    char *label = new char[10];
 
     Fl_Slider *as_slider = (Fl_Slider *)o;
     Fl_Dial *as_dial = (Fl_Dial *)o;
