@@ -18,7 +18,7 @@ Only the basic GUI has been built - no actual USB communication has been impleme
 
 N/A.
 
-## Building
+## Build
 
 The following commands are used to build the project:
 
