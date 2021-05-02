@@ -10,7 +10,7 @@ The goal of the project is to be able to control all the parameters which are no
 
 Only the basic GUI has been built - no actual USB communication has been implemented yet. Have a look at the references below to get started.
 
-## Screenshots
+## Screenshot
 
 ![evoctl screenshot](https://raw.githubusercontent.com/soerenbnoergaard/evoctl/main/doc/screenshot1.png)
 
