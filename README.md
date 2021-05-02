@@ -1,4 +1,4 @@
-# EVOCTL
+# evoctl
 
 Linux equivalent of the Audient EVO Mixer for their EVO 8 audio interface.
 
@@ -6,7 +6,7 @@ The application allows the user to control the levels for low-latency monitoring
 
 The goal of the project is to be able to control all the parameters which are not available on the interface itself - not to make a complete clone of the Audient UI.
 
-## Project status
+## Status
 
 Only the basic GUI has been built - no actual USB communication has been implemented yet. Have a look at the references below to get started.
 
