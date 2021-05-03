@@ -1,7 +1,8 @@
 #include "evoctl.h"
 
-HeaderLabel::HeaderLabel(int X, int Y, const char *L) : Fl_Box(X, Y, 40, 20, L)
+HeaderLabel::HeaderLabel(int X, int Y, const char *L, Fl_Align align) : Fl_Box(X, Y, 40, 20, L)
 {
+    this->align(align);
 }
 
 VolumeFader::VolumeFader(int X, int Y, double value, Fl_Callback0 *callback) : Fl_Slider(X, Y, 40, 150, "")
@@ -55,6 +56,7 @@ int PanDial::handle(int event)
     switch (event) {
     case FL_RELEASE:
         if (Fl::event_clicks() > 0) {
+            Fl::event_clicks(0);
             reset();
         }
     default:
@@ -62,7 +64,7 @@ int PanDial::handle(int event)
     }
 }
 
-ResetButton::ResetButton(int X, int Y, const char *L, void *parent) : Fl_Button(X, Y, 40, 20, L)
+ResetButton::ResetButton(int X, int Y, const char *L, void *parent) : Fl_Button(X, Y, 50, 20, L)
 {
     this->callback(reset, parent);
 }
@@ -76,7 +78,7 @@ void ResetButton::reset(Fl_Widget *o, void *parent)
 Gui::Gui()
 {
     int W = 480;
-    int H = 320;
+    int H = 640;
 
     Fl_Window *window = new Fl_Window(W, H, "evoctl");
     window->begin();
@@ -90,28 +92,49 @@ Gui::Gui()
 
     x = 0;
     y = 40;
-    new HeaderLabel(b + m*x++, y, "MIC 1");
-    new HeaderLabel(b + m*x++, y, "MIC 2");
-    new HeaderLabel(b + m*x++, y, "MIC 3");
-    new HeaderLabel(b + m*x++, y, "MIC 4");
-    new HeaderLabel(b + m*x++, y, "DAW 1+2");
-    new HeaderLabel(b + m*x++, y, "DAW 3+4");
+    new HeaderLabel(b + m*x++, y, "MIC 1",   FL_ALIGN_CENTER);
+    new HeaderLabel(b + m*x++, y, "MIC 2",   FL_ALIGN_CENTER);
+    new HeaderLabel(b + m*x++, y, "MIC 3",   FL_ALIGN_CENTER);
+    new HeaderLabel(b + m*x++, y, "MIC 4",   FL_ALIGN_CENTER);
+    new HeaderLabel(b + m*x++, y, "DAW 1+2", FL_ALIGN_CENTER);
+    new HeaderLabel(b + m*x++, y, "DAW 3+4", FL_ALIGN_CENTER);
+
+    new HeaderLabel(10, 70,  "OUTPUT 1+2", FL_ALIGN_LEFT | FL_ALIGN_INSIDE);
 
     x = 0;
-    y = 70;
-    pan_mic1 = new PanDial(b + m*x++, y, 0.0, cb_pan_mic1);
-    pan_mic2 = new PanDial(b + m*x++, y, 0.0, cb_pan_mic2);
-    pan_mic3 = new PanDial(b + m*x++, y, 0.0, cb_pan_mic3);
-    pan_mic4 = new PanDial(b + m*x++, y, 0.0, cb_pan_mic4);
+    y = 100;
+    out12_pan_mic1 = new PanDial(b + m*x++, y, 0.0, cb_out12_pan_mic1);
+    out12_pan_mic2 = new PanDial(b + m*x++, y, 0.0, cb_out12_pan_mic2);
+    out12_pan_mic3 = new PanDial(b + m*x++, y, 0.0, cb_out12_pan_mic3);
+    out12_pan_mic4 = new PanDial(b + m*x++, y, 0.0, cb_out12_pan_mic4);
 
     x = 0;
-    y = 140;
-    vol_mic1  = new VolumeFader(b + m*x++, y, -60.0, cb_vol_mic1);
-    vol_mic2  = new VolumeFader(b + m*x++, y, -60.0, cb_vol_mic2);
-    vol_mic3  = new VolumeFader(b + m*x++, y, -60.0, cb_vol_mic3);
-    vol_mic4  = new VolumeFader(b + m*x++, y, -60.0, cb_vol_mic4);
-    vol_daw12 = new VolumeFader(b + m*x++, y,   0.0, cb_vol_daw12);
-    vol_daw34 = new VolumeFader(b + m*x++, y, -60.0, cb_vol_daw34);
+    y = 170;
+    out12_vol_mic1  = new VolumeFader(b + m*x++, y, -60.0, cb_out12_vol_mic1);
+    out12_vol_mic2  = new VolumeFader(b + m*x++, y, -60.0, cb_out12_vol_mic2);
+    out12_vol_mic3  = new VolumeFader(b + m*x++, y, -60.0, cb_out12_vol_mic3);
+    out12_vol_mic4  = new VolumeFader(b + m*x++, y, -60.0, cb_out12_vol_mic4);
+    out12_vol_daw12 = new VolumeFader(b + m*x++, y,   0.0, cb_out12_vol_daw12);
+    out12_vol_daw34 = new VolumeFader(b + m*x++, y, -60.0, cb_out12_vol_daw34);
+
+    new HeaderLabel(10, 350, "OUTPUT 3+4", FL_ALIGN_LEFT | FL_ALIGN_INSIDE);
+
+    x = 0;
+    y = 380;
+    out34_pan_mic1 = new PanDial(b + m*x++, y, 0.0, cb_out34_pan_mic1);
+    out34_pan_mic2 = new PanDial(b + m*x++, y, 0.0, cb_out34_pan_mic2);
+    out34_pan_mic3 = new PanDial(b + m*x++, y, 0.0, cb_out34_pan_mic3);
+    out34_pan_mic4 = new PanDial(b + m*x++, y, 0.0, cb_out34_pan_mic4);
+
+
+    x = 0;
+    y = 450;
+    out34_vol_mic1  = new VolumeFader(b + m*x++, y, -60.0, cb_out34_vol_mic1);
+    out34_vol_mic2  = new VolumeFader(b + m*x++, y, -60.0, cb_out34_vol_mic2);
+    out34_vol_mic3  = new VolumeFader(b + m*x++, y, -60.0, cb_out34_vol_mic3);
+    out34_vol_mic4  = new VolumeFader(b + m*x++, y, -60.0, cb_out34_vol_mic4);
+    out34_vol_daw12 = new VolumeFader(b + m*x++, y, -60.0, cb_out34_vol_daw12);
+    out34_vol_daw34 = new VolumeFader(b + m*x++, y,   0.0, cb_out34_vol_daw34);
 
     window->end();
     window->show();
@@ -123,18 +146,27 @@ Gui::~Gui()
 
 void Gui::reset()
 {
-    pan_mic1->reset();
-    pan_mic2->reset();
-    pan_mic3->reset();
-    pan_mic4->reset();
+    out12_pan_mic1->reset();
+    out12_pan_mic2->reset();
+    out12_pan_mic3->reset();
+    out12_pan_mic4->reset();
+    out12_vol_mic1->reset();
+    out12_vol_mic2->reset();
+    out12_vol_mic3->reset();
+    out12_vol_mic4->reset();
+    out12_vol_daw12->reset();
+    out12_vol_daw34->reset();
 
-    vol_mic1->reset();
-    vol_mic2->reset();
-    vol_mic3->reset();
-    vol_mic4->reset();
-
-    vol_daw12->reset();
-    vol_daw34->reset();
+    out34_pan_mic1->reset();
+    out34_pan_mic2->reset();
+    out34_pan_mic3->reset();
+    out34_pan_mic4->reset();
+    out34_vol_mic1->reset();
+    out34_vol_mic2->reset();
+    out34_vol_mic3->reset();
+    out34_vol_mic4->reset();
+    out34_vol_daw12->reset();
+    out34_vol_daw34->reset();
 }
 
 void Gui::on_change(identifier_t id, Fl_Widget *o)
@@ -145,21 +177,31 @@ void Gui::on_change(identifier_t id, Fl_Widget *o)
     Fl_Dial *as_dial = (Fl_Dial *)o;
 
     switch (id) {
-    case ID_VOL_MIC1:
-    case ID_VOL_MIC2:
-    case ID_VOL_MIC3:
-    case ID_VOL_MIC4:
-    case ID_VOL_DAW12:
-    case ID_VOL_DAW34:
-        snprintf(label, 10, "%.1lf", as_slider->value());
-        as_slider->label(label);
-        break;
-    case ID_PAN_MIC1:
-    case ID_PAN_MIC2:
-    case ID_PAN_MIC3:
-    case ID_PAN_MIC4:
+    case ID_OUT12_PAN_MIC1:
+    case ID_OUT12_PAN_MIC2:
+    case ID_OUT12_PAN_MIC3:
+    case ID_OUT12_PAN_MIC4:
+    case ID_OUT34_PAN_MIC1:
+    case ID_OUT34_PAN_MIC2:
+    case ID_OUT34_PAN_MIC3:
+    case ID_OUT34_PAN_MIC4:
         snprintf(label, 10, "%.1lf", as_dial->value());
         as_dial->label(label);
+        break;
+    case ID_OUT12_VOL_MIC1:
+    case ID_OUT12_VOL_MIC2:
+    case ID_OUT12_VOL_MIC3:
+    case ID_OUT12_VOL_MIC4:
+    case ID_OUT12_VOL_DAW12:
+    case ID_OUT12_VOL_DAW34:
+    case ID_OUT34_VOL_MIC1:
+    case ID_OUT34_VOL_MIC2:
+    case ID_OUT34_VOL_MIC3:
+    case ID_OUT34_VOL_MIC4:
+    case ID_OUT34_VOL_DAW12:
+    case ID_OUT34_VOL_DAW34:
+        snprintf(label, 10, "%.1lf", as_slider->value());
+        as_slider->label(label);
         break;
     }
 }
