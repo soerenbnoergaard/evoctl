@@ -7,11 +7,10 @@
 class PanDial : public Fl_Dial
 {
 public:
-    PanDial(int X, int Y, double value, Fl_Callback0 *callback);
+    PanDial(int X, int Y, Fl_Callback *callback, void *callback_data);
     void reset();
 
 private:
-    double reset_value;
     int handle(int event);
 };
 

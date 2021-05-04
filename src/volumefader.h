@@ -7,11 +7,11 @@
 class VolumeFader : public Fl_Slider
 {
 public:
-    VolumeFader(int X, int Y, double value, Fl_Callback0 *callback);
+    VolumeFader(int X, int Y, Fl_Callback *callback, void *callback_data);
     void reset();
+    int value(double v);
 
 private:
-    double reset_value;
     int handle(int event);
 };
 

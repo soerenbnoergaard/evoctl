@@ -1,19 +1,17 @@
 #include "volumefader.h"
 
-VolumeFader::VolumeFader(int X, int Y, double value, Fl_Callback0 *callback) : Fl_Slider(X, Y, 40, 150, "")
+VolumeFader::VolumeFader(int X, int Y, Fl_Callback *callback, void *callback_data) : Fl_Slider(X, Y, 40, 150, "")
 {
-    reset_value = value;
     this->minimum(6.0);
     this->maximum(-60.0);
     this->step(1.0);
-    this->value(reset_value);
-    this->callback(callback);
-    this->do_callback();
+    this->callback(callback, callback_data);
+    this->reset();
 }
 
 void VolumeFader::reset()
 {
-    this->value(reset_value);
+    this->value(-60.0);
     this->do_callback();
 }
 
@@ -29,3 +27,10 @@ int VolumeFader::handle(int event)
     }
 }
 
+int VolumeFader::value(double v)
+{
+    char *buffer = new char[16];
+    snprintf(buffer, 16, "%.0f", v);
+    this->label(buffer);
+    return Fl_Slider::value(v);
+}
