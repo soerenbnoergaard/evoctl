@@ -1,5 +1,5 @@
 TARGET = evoctl$(EXEEXT)
-SOURCES = evoctl.cxx volumefader.cxx pandial.cxx
+SOURCES = evoctl.cxx guielements.cxx
 OBJECTS = $(SOURCES:.cxx=.o)
 
 ifeq '$(OS)' "Windows_NT"

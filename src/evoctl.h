@@ -2,8 +2,7 @@
 #define EVOCTL_H
 
 #include "settings.h"
-#include "volumefader.h"
-#include "pandial.h"
+#include "guielements.h"
 
 #include <FL/Fl.H>
 #include <FL/Fl_Window.H>
