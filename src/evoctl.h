@@ -1,9 +1,11 @@
+#ifndef EVOCTL_H
+#define EVOCTL_H
+
+#include "volumefader.h"
+#include "pandial.h"
+
 #include <FL/Fl.H>
 #include <FL/Fl_Window.H>
-#include <FL/Fl_Box.H>
-#include <FL/Fl_Button.H>
-#include <FL/Fl_Slider.H>
-#include <FL/Fl_Dial.H>
 
 typedef enum {
     ID_OUT12_PAN_MIC1,
@@ -28,43 +30,6 @@ typedef enum {
     ID_OUT34_VOL_DAW12,
     ID_OUT34_VOL_DAW34,
 } identifier_t;
-
-class HeaderLabel : public Fl_Box
-{
-public:
-    HeaderLabel(int X, int Y, const char *L, Fl_Align align);
-};
-
-class VolumeFader : public Fl_Slider
-{
-public:
-    VolumeFader(int X, int Y, double value, Fl_Callback0 *callback);
-    void reset();
-
-private:
-    double reset_value;
-    int handle(int event);
-};
-
-class PanDial : public Fl_Dial
-{
-public:
-    PanDial(int X, int Y, double value, Fl_Callback0 *callback);
-    void reset();
-
-private:
-    double reset_value;
-    int handle(int event);
-};
-
-class ResetButton : Fl_Button
-{
-public:
-    ResetButton(int X, int Y, const char *L, void *parent);
-
-private:
-    static void reset(Fl_Widget *o, void *parent);
-};
 
 class Gui
 {
@@ -120,3 +85,5 @@ private:
 
     static void on_change(identifier_t id, Fl_Widget *o);
 };
+
+#endif

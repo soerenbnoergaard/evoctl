@@ -1,80 +1,5 @@
 #include "evoctl.h"
 
-HeaderLabel::HeaderLabel(int X, int Y, const char *L, Fl_Align align) : Fl_Box(X, Y, 40, 20, L)
-{
-    this->align(align);
-}
-
-VolumeFader::VolumeFader(int X, int Y, double value, Fl_Callback0 *callback) : Fl_Slider(X, Y, 40, 150, "")
-{
-    reset_value = value;
-    this->minimum(6.0);
-    this->maximum(-60.0);
-    this->step(1.0);
-    this->value(reset_value);
-    this->callback(callback);
-    this->do_callback();
-}
-
-void VolumeFader::reset()
-{
-    this->value(reset_value);
-    this->do_callback();
-}
-
-int VolumeFader::handle(int event)
-{
-    switch (event) {
-    case FL_RELEASE:
-        if (Fl::event_clicks() > 0) {
-            reset();
-        }
-    default:
-        return Fl_Slider::handle(event);
-    }
-}
-
-PanDial::PanDial(int X, int Y, double value, Fl_Callback0 *callback) : Fl_Dial(X, Y, 40, 40, "")
-{
-    reset_value = value;
-    this->minimum(-100.0);
-    this->maximum(100.0);
-    this->step(1.0);
-    this->value(reset_value);
-    this->callback(callback);
-    this->do_callback();
-}
-
-void PanDial::reset()
-{
-    this->value(reset_value);
-    this->do_callback();
-}
-
-int PanDial::handle(int event)
-{
-    switch (event) {
-    case FL_RELEASE:
-        if (Fl::event_clicks() > 0) {
-            Fl::event_clicks(0);
-            reset();
-        }
-    default:
-        return Fl_Dial::handle(event);
-    }
-}
-
-ResetButton::ResetButton(int X, int Y, const char *L, void *parent) : Fl_Button(X, Y, 50, 20, L)
-{
-    this->callback(reset, parent);
-}
-
-void ResetButton::reset(Fl_Widget *o, void *parent)
-{
-    Gui *gui = (Gui *)parent;
-    gui->reset();
-}
-
 Gui::Gui()
 {
     int W = 480;
@@ -88,18 +13,18 @@ Gui::Gui()
     m = 80;
     b = 10;
 
-    new ResetButton(10, 10, "Reset", (void *)this);
+    // new ResetButton(10, 10, "Reset", (void *)this);
 
-    x = 0;
-    y = 40;
-    new HeaderLabel(b + m*x++, y, "MIC 1",   FL_ALIGN_CENTER);
-    new HeaderLabel(b + m*x++, y, "MIC 2",   FL_ALIGN_CENTER);
-    new HeaderLabel(b + m*x++, y, "MIC 3",   FL_ALIGN_CENTER);
-    new HeaderLabel(b + m*x++, y, "MIC 4",   FL_ALIGN_CENTER);
-    new HeaderLabel(b + m*x++, y, "DAW 1+2", FL_ALIGN_CENTER);
-    new HeaderLabel(b + m*x++, y, "DAW 3+4", FL_ALIGN_CENTER);
-
-    new HeaderLabel(10, 70,  "OUTPUT 1+2", FL_ALIGN_LEFT | FL_ALIGN_INSIDE);
+    /* x = 0; */
+    /* y = 40; */
+    /* new HeaderLabel(b + m*x++, y, "MIC 1",   FL_ALIGN_CENTER); */
+    /* new HeaderLabel(b + m*x++, y, "MIC 2",   FL_ALIGN_CENTER); */
+    /* new HeaderLabel(b + m*x++, y, "MIC 3",   FL_ALIGN_CENTER); */
+    /* new HeaderLabel(b + m*x++, y, "MIC 4",   FL_ALIGN_CENTER); */
+    /* new HeaderLabel(b + m*x++, y, "DAW 1+2", FL_ALIGN_CENTER); */
+    /* new HeaderLabel(b + m*x++, y, "DAW 3+4", FL_ALIGN_CENTER); */
+    /*  */
+    /* new HeaderLabel(10, 70,  "OUTPUT 1+2", FL_ALIGN_LEFT | FL_ALIGN_INSIDE); */
 
     x = 0;
     y = 100;
@@ -117,7 +42,7 @@ Gui::Gui()
     out12_vol_daw12 = new VolumeFader(b + m*x++, y,   0.0, cb_out12_vol_daw12);
     out12_vol_daw34 = new VolumeFader(b + m*x++, y, -60.0, cb_out12_vol_daw34);
 
-    new HeaderLabel(10, 350, "OUTPUT 3+4", FL_ALIGN_LEFT | FL_ALIGN_INSIDE);
+    // new HeaderLabel(10, 350, "OUTPUT 3+4", FL_ALIGN_LEFT | FL_ALIGN_INSIDE);
 
     x = 0;
     y = 380;
