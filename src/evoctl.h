@@ -1,6 +1,7 @@
 #ifndef EVOCTL_H
 #define EVOCTL_H
 
+#include "settings.h"
 #include "volumefader.h"
 #include "pandial.h"
 
