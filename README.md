@@ -28,7 +28,7 @@ The following commands are used to build the project:
     git submodule update
     make
 
-The output will be an executable, `evoctl`, in the `src/` directory.
+The output will be an executable, `evoctl` in the `src/` directory.
 
 ## References
 
