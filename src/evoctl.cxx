@@ -17,8 +17,6 @@ Gui::Gui()
     w = 40;
     h = 20;
 
-    // new ResetButton(10, 10, "Reset", (void *)this);
-
     x = 0;
     y = 40;
 
@@ -43,7 +41,6 @@ Gui::Gui()
     this->out12.daw2.pan_percent = new PanDial(b + m*x++, y, on_change, this);
     this->out12.daw3.pan_percent = new PanDial(b + m*x++, y, on_change, this);
     this->out12.daw4.pan_percent = new PanDial(b + m*x++, y, on_change, this);
-
 
     x = 0;
     y = 170;
@@ -132,11 +129,11 @@ void Gui::update(Settings s)
 
 void Gui::on_change(Fl_Widget *o, void *v)
 {
-	// Type cast arguments
-	Fl_Valuator *as_valuator = (Fl_Valuator *)o;
+    // Type cast arguments
+    Fl_Valuator *as_valuator = (Fl_Valuator *)o;
     Gui *gui = (Gui *)v;
 
-	// Update GUI labels
+    // Update GUI labels
     char *buffer = new char[16];
     snprintf(buffer, 16, "%.0f", as_valuator->value());
     as_valuator->label(buffer);
@@ -154,16 +151,16 @@ void Gui::on_change(Fl_Widget *o, void *v)
     else if (o == gui->out12.mic4.volume_dB) {
     }
     else if (o == gui->out12.daw1.volume_dB) {
-		gui->out12.daw2.volume_dB->value(gui->out12.daw1.volume_dB->value());
+        gui->out12.daw2.volume_dB->value(gui->out12.daw1.volume_dB->value());
     }
     else if (o == gui->out12.daw2.volume_dB) {
-		gui->out12.daw1.volume_dB->value(gui->out12.daw2.volume_dB->value());
+        gui->out12.daw1.volume_dB->value(gui->out12.daw2.volume_dB->value());
     }
     else if (o == gui->out12.daw3.volume_dB) {
-		gui->out12.daw4.volume_dB->value(gui->out12.daw3.volume_dB->value());
+        gui->out12.daw4.volume_dB->value(gui->out12.daw3.volume_dB->value());
     }
     else if (o == gui->out12.daw4.volume_dB) {
-		gui->out12.daw3.volume_dB->value(gui->out12.daw4.volume_dB->value());
+        gui->out12.daw3.volume_dB->value(gui->out12.daw4.volume_dB->value());
     }
     else if (o == gui->out34.mic1.volume_dB) {
     }
@@ -174,16 +171,16 @@ void Gui::on_change(Fl_Widget *o, void *v)
     else if (o == gui->out34.mic4.volume_dB) {
     }
     else if (o == gui->out34.daw1.volume_dB) {
-		gui->out34.daw2.volume_dB->value(gui->out34.daw1.volume_dB->value());
+        gui->out34.daw2.volume_dB->value(gui->out34.daw1.volume_dB->value());
     }
     else if (o == gui->out34.daw2.volume_dB) {
-		gui->out34.daw1.volume_dB->value(gui->out34.daw2.volume_dB->value());
+        gui->out34.daw1.volume_dB->value(gui->out34.daw2.volume_dB->value());
     }
     else if (o == gui->out34.daw3.volume_dB) {
-		gui->out34.daw4.volume_dB->value(gui->out34.daw3.volume_dB->value());
+        gui->out34.daw4.volume_dB->value(gui->out34.daw3.volume_dB->value());
     }
     else if (o == gui->out34.daw4.volume_dB) {
-		gui->out34.daw3.volume_dB->value(gui->out34.daw4.volume_dB->value());
+        gui->out34.daw3.volume_dB->value(gui->out34.daw4.volume_dB->value());
     }
     else if (o == gui->out12.mic1.pan_percent) {
     }
