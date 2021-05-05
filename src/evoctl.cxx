@@ -127,6 +127,49 @@ void Gui::update(Settings s)
     this->settings = s;
 }
 
+Settings Gui::get_settings_from_gui()
+{
+    Settings s;
+
+    s.out12.mic1.volume_dB = this->out12.mic1.volume_dB->value();
+    s.out12.mic2.volume_dB = this->out12.mic2.volume_dB->value();
+    s.out12.mic3.volume_dB = this->out12.mic3.volume_dB->value();
+    s.out12.mic4.volume_dB = this->out12.mic4.volume_dB->value();
+    s.out12.daw1.volume_dB = this->out12.daw1.volume_dB->value();
+    s.out12.daw2.volume_dB = this->out12.daw2.volume_dB->value();
+    s.out12.daw3.volume_dB = this->out12.daw3.volume_dB->value();
+    s.out12.daw4.volume_dB = this->out12.daw4.volume_dB->value();
+
+    s.out34.mic1.volume_dB = this->out34.mic1.volume_dB->value();
+    s.out34.mic2.volume_dB = this->out34.mic2.volume_dB->value();
+    s.out34.mic3.volume_dB = this->out34.mic3.volume_dB->value();
+    s.out34.mic4.volume_dB = this->out34.mic4.volume_dB->value();
+    s.out34.daw1.volume_dB = this->out34.daw1.volume_dB->value();
+    s.out34.daw2.volume_dB = this->out34.daw2.volume_dB->value();
+    s.out34.daw3.volume_dB = this->out34.daw3.volume_dB->value();
+    s.out34.daw4.volume_dB = this->out34.daw4.volume_dB->value();
+
+    s.out12.mic1.pan_percent = this->out12.mic1.pan_percent->value();
+    s.out12.mic2.pan_percent = this->out12.mic2.pan_percent->value();
+    s.out12.mic3.pan_percent = this->out12.mic3.pan_percent->value();
+    s.out12.mic4.pan_percent = this->out12.mic4.pan_percent->value();
+    s.out12.daw1.pan_percent = this->out12.daw1.pan_percent->value();
+    s.out12.daw2.pan_percent = this->out12.daw2.pan_percent->value();
+    s.out12.daw3.pan_percent = this->out12.daw3.pan_percent->value();
+    s.out12.daw4.pan_percent = this->out12.daw4.pan_percent->value();
+
+    s.out34.mic1.pan_percent = this->out34.mic1.pan_percent->value();
+    s.out34.mic2.pan_percent = this->out34.mic2.pan_percent->value();
+    s.out34.mic3.pan_percent = this->out34.mic3.pan_percent->value();
+    s.out34.mic4.pan_percent = this->out34.mic4.pan_percent->value();
+    s.out34.daw1.pan_percent = this->out34.daw1.pan_percent->value();
+    s.out34.daw2.pan_percent = this->out34.daw2.pan_percent->value();
+    s.out34.daw3.pan_percent = this->out34.daw3.pan_percent->value();
+    s.out34.daw4.pan_percent = this->out34.daw4.pan_percent->value();
+
+    return s;
+}
+
 void Gui::on_change(Fl_Widget *o, void *v)
 {
     // Type cast arguments
@@ -138,7 +181,7 @@ void Gui::on_change(Fl_Widget *o, void *v)
     snprintf(buffer, 16, "%.0f", as_valuator->value());
     as_valuator->label(buffer);
 
-    Settings s = gui->get_settings();
+    // Settings s = gui->get_settings();
 
     if (o == nullptr) {
     }
