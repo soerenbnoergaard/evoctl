@@ -36,6 +36,7 @@ public:
     ~Gui();
     void update(Settings s);
     Settings get_settings() { return this->settings; };
+    Settings get_settings_from_gui();
 
 private:
     Mix<VolumeFader *, PanDial *> out12;

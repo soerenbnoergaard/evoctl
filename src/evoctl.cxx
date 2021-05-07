@@ -17,8 +17,6 @@ Gui::Gui()
     w = 40;
     h = 20;
 
-    // new ResetButton(10, 10, "Reset", (void *)this);
-
     x = 0;
     y = 40;
 
@@ -43,7 +41,6 @@ Gui::Gui()
     this->out12.daw2.pan_percent = new PanDial(b + m*x++, y, on_change, this);
     this->out12.daw3.pan_percent = new PanDial(b + m*x++, y, on_change, this);
     this->out12.daw4.pan_percent = new PanDial(b + m*x++, y, on_change, this);
-
 
     x = 0;
     y = 170;
@@ -130,111 +127,135 @@ void Gui::update(Settings s)
     this->settings = s;
 }
 
+Settings Gui::get_settings_from_gui()
+{
+    Settings s;
+
+    s.out12.mic1.volume_dB = this->out12.mic1.volume_dB->value();
+    s.out12.mic2.volume_dB = this->out12.mic2.volume_dB->value();
+    s.out12.mic3.volume_dB = this->out12.mic3.volume_dB->value();
+    s.out12.mic4.volume_dB = this->out12.mic4.volume_dB->value();
+    s.out12.daw1.volume_dB = this->out12.daw1.volume_dB->value();
+    s.out12.daw2.volume_dB = this->out12.daw2.volume_dB->value();
+    s.out12.daw3.volume_dB = this->out12.daw3.volume_dB->value();
+    s.out12.daw4.volume_dB = this->out12.daw4.volume_dB->value();
+
+    s.out34.mic1.volume_dB = this->out34.mic1.volume_dB->value();
+    s.out34.mic2.volume_dB = this->out34.mic2.volume_dB->value();
+    s.out34.mic3.volume_dB = this->out34.mic3.volume_dB->value();
+    s.out34.mic4.volume_dB = this->out34.mic4.volume_dB->value();
+    s.out34.daw1.volume_dB = this->out34.daw1.volume_dB->value();
+    s.out34.daw2.volume_dB = this->out34.daw2.volume_dB->value();
+    s.out34.daw3.volume_dB = this->out34.daw3.volume_dB->value();
+    s.out34.daw4.volume_dB = this->out34.daw4.volume_dB->value();
+
+    s.out12.mic1.pan_percent = this->out12.mic1.pan_percent->value();
+    s.out12.mic2.pan_percent = this->out12.mic2.pan_percent->value();
+    s.out12.mic3.pan_percent = this->out12.mic3.pan_percent->value();
+    s.out12.mic4.pan_percent = this->out12.mic4.pan_percent->value();
+    s.out12.daw1.pan_percent = this->out12.daw1.pan_percent->value();
+    s.out12.daw2.pan_percent = this->out12.daw2.pan_percent->value();
+    s.out12.daw3.pan_percent = this->out12.daw3.pan_percent->value();
+    s.out12.daw4.pan_percent = this->out12.daw4.pan_percent->value();
+
+    s.out34.mic1.pan_percent = this->out34.mic1.pan_percent->value();
+    s.out34.mic2.pan_percent = this->out34.mic2.pan_percent->value();
+    s.out34.mic3.pan_percent = this->out34.mic3.pan_percent->value();
+    s.out34.mic4.pan_percent = this->out34.mic4.pan_percent->value();
+    s.out34.daw1.pan_percent = this->out34.daw1.pan_percent->value();
+    s.out34.daw2.pan_percent = this->out34.daw2.pan_percent->value();
+    s.out34.daw3.pan_percent = this->out34.daw3.pan_percent->value();
+    s.out34.daw4.pan_percent = this->out34.daw4.pan_percent->value();
+
+    return s;
+}
+
 void Gui::on_change(Fl_Widget *o, void *v)
 {
+    // Type cast arguments
+    Fl_Valuator *as_valuator = (Fl_Valuator *)o;
     Gui *gui = (Gui *)v;
-    Settings s = gui->get_settings();
 
-    VolumeFader *as_volume = (VolumeFader *)o;
-    PanDial *as_pan = (PanDial *)o;
+    // Update GUI labels
+    char *buffer = new char[16];
+    snprintf(buffer, 16, "%.0f", as_valuator->value());
+    as_valuator->label(buffer);
+
+    // Settings s = gui->get_settings();
 
     if (o == nullptr) {
     }
     else if (o == gui->out12.mic1.volume_dB) {
-        as_volume->update();
     }
     else if (o == gui->out12.mic2.volume_dB) {
-        as_volume->update();
     }
     else if (o == gui->out12.mic3.volume_dB) {
-        as_volume->update();
     }
     else if (o == gui->out12.mic4.volume_dB) {
-        as_volume->update();
     }
     else if (o == gui->out12.daw1.volume_dB) {
-        as_volume->update();
+        gui->out12.daw2.volume_dB->value(gui->out12.daw1.volume_dB->value());
     }
     else if (o == gui->out12.daw2.volume_dB) {
-        as_volume->update();
+        gui->out12.daw1.volume_dB->value(gui->out12.daw2.volume_dB->value());
     }
     else if (o == gui->out12.daw3.volume_dB) {
-        as_volume->update();
+        gui->out12.daw4.volume_dB->value(gui->out12.daw3.volume_dB->value());
     }
     else if (o == gui->out12.daw4.volume_dB) {
-        as_volume->update();
+        gui->out12.daw3.volume_dB->value(gui->out12.daw4.volume_dB->value());
     }
     else if (o == gui->out34.mic1.volume_dB) {
-        as_volume->update();
     }
     else if (o == gui->out34.mic2.volume_dB) {
-        as_volume->update();
     }
     else if (o == gui->out34.mic3.volume_dB) {
-        as_volume->update();
     }
     else if (o == gui->out34.mic4.volume_dB) {
-        as_volume->update();
     }
     else if (o == gui->out34.daw1.volume_dB) {
-        as_volume->update();
+        gui->out34.daw2.volume_dB->value(gui->out34.daw1.volume_dB->value());
     }
     else if (o == gui->out34.daw2.volume_dB) {
-        as_volume->update();
+        gui->out34.daw1.volume_dB->value(gui->out34.daw2.volume_dB->value());
     }
     else if (o == gui->out34.daw3.volume_dB) {
-        as_volume->update();
+        gui->out34.daw4.volume_dB->value(gui->out34.daw3.volume_dB->value());
     }
     else if (o == gui->out34.daw4.volume_dB) {
-        as_volume->update();
+        gui->out34.daw3.volume_dB->value(gui->out34.daw4.volume_dB->value());
     }
     else if (o == gui->out12.mic1.pan_percent) {
-        as_pan->update();
     }
     else if (o == gui->out12.mic2.pan_percent) {
-        as_pan->update();
     }
     else if (o == gui->out12.mic3.pan_percent) {
-        as_pan->update();
     }
     else if (o == gui->out12.mic4.pan_percent) {
-        as_pan->update();
     }
     else if (o == gui->out12.daw1.pan_percent) {
-        as_pan->update();
     }
     else if (o == gui->out12.daw2.pan_percent) {
-        as_pan->update();
     }
     else if (o == gui->out12.daw3.pan_percent) {
-        as_pan->update();
     }
     else if (o == gui->out12.daw4.pan_percent) {
-        as_pan->update();
     }
     else if (o == gui->out34.mic1.pan_percent) {
-        as_pan->update();
     }
     else if (o == gui->out34.mic2.pan_percent) {
-        as_pan->update();
     }
     else if (o == gui->out34.mic3.pan_percent) {
-        as_pan->update();
     }
     else if (o == gui->out34.mic4.pan_percent) {
-        as_pan->update();
     }
     else if (o == gui->out34.daw1.pan_percent) {
-        as_pan->update();
     }
     else if (o == gui->out34.daw2.pan_percent) {
-        as_pan->update();
     }
     else if (o == gui->out34.daw3.pan_percent) {
-        as_pan->update();
     }
     else if (o == gui->out34.daw4.pan_percent) {
-        as_pan->update();
     }
 
     // gui->update(s);
