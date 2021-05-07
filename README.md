@@ -30,9 +30,18 @@ The following commands are used to build the project:
 
 The output will be an executable, `evoctl` in the `src/` directory.
 
+## Setup
+
+To use the program without sudo, create the file `/etc/udev/rules.d/70-audient.evo.rules` with the following content:
+
+    SUBSYSTEM=="usb", ATTR{idVendor}=="2708", ATTR{idProduct}=="0006", MODE="0666"
+    SUBSYSTEM=="usb", ATTR{idVendor}=="2708", ATTR{idProduct}=="0007", MODE="0666"
+
 ## References
 
 Other people have also been looking into controlling Audient interfaces from Linux:
 
 - [audient-evo-linux-tools](https://github.com/vijay-prema/audient-evo-linux-tools)
 - [mymixer](https://github.com/r00tman/mymixer)
+
+Both of these have been very helpful in the development of this tool - thanks a lot!
