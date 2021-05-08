@@ -170,14 +170,6 @@ void TransferMatrixTable::event_callback2()
 
 TransferMatrixTable::TransferMatrixTable(int X, int Y, int W, int H, const char *L) : Fl_Table(X,Y,W,H,L)
 {
-    callback(&event_callback, (void*)this);
-    when(FL_WHEN_NOT_CHANGED|when());
-
-    input = new Fl_Int_Input(W/2,H/2,0,0);
-    input->hide();
-    input->callback(input_cb, (void*)this);
-    input->when(FL_WHEN_ENTER_KEY_ALWAYS);
-
     // Initialize transfer matrix
     for (int i = 0; i < NUM_OUTPUTS; i++) {
         for (int j = 0; j < NUM_INPUTS; j++) {
@@ -189,6 +181,16 @@ TransferMatrixTable::TransferMatrixTable(int X, int Y, int W, int H, const char 
     this->H.values[OUTPUT3][INPUT_DAW1] = 0;
     this->H.values[OUTPUT4][INPUT_DAW2] = 0;
 
+    // Set up callbacks
+    callback(&event_callback, (void*)this);
+    when(FL_WHEN_NOT_CHANGED|when());
+
+    input = new Fl_Int_Input(W/2,H/2,0,0);
+    input->hide();
+    input->callback(input_cb, (void*)this);
+    input->when(FL_WHEN_ENTER_KEY_ALWAYS);
+
+    // Set up table UI
     rows(NUM_OUTPUTS);
     row_header(1);
     row_height_all(20);
@@ -198,5 +200,4 @@ TransferMatrixTable::TransferMatrixTable(int X, int Y, int W, int H, const char 
     col_header(1);
     col_width_all(80);
     col_resize(1);
-    end();
 }
