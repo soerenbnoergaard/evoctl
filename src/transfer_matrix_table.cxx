@@ -124,17 +124,13 @@ void TransferMatrixTable::event_callback2()
         switch (Fl::event()) {
         case FL_PUSH:
             done_editing();
-            if (R != rows()-1 && C != cols()-1 )
-                start_editing(R,C);
+            start_editing(R,C);
             return;
 
         case FL_KEYBOARD:
             if ( Fl::event_key() == FL_Escape )
                 exit(0);
             done_editing();
-
-            if (C == cols()-1 || R == rows()-1)
-                return;
 
             switch (Fl::e_text[0]) {
             case '0':
