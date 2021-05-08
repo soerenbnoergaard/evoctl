@@ -3,7 +3,6 @@
 
 #include <cstdint>
 #include "settings.h"
-#include "guielements.h"
 
 #include <FL/Fl.H>
 #include <FL/Fl_Window.H>
