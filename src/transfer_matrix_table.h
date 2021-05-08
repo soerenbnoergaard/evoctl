@@ -27,7 +27,8 @@ private:
 public:
     TransferMatrixTable(int X, int Y, int W, int H, const char *L=0);
     ~TransferMatrixTable() { }
-    void set_callback_value_changed(void (*f)(transfer_matrix_t)) { this->callback_value_changed = f; };
+    void set_callback_value_changed(void (*f)(transfer_matrix_t)) { this->callback_value_changed = f; }
+    transfer_matrix_t get_transfer_matrix() { return H; }
 };
 
 #endif
