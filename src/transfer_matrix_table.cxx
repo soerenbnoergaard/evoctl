@@ -200,4 +200,9 @@ TransferMatrixTable::TransferMatrixTable(int X, int Y, int W, int H, const char 
     col_header(1);
     col_width_all(80);
     col_resize(1);
+
+    end();
+    row_edit = 0;
+    col_edit = 0;
+    set_selection(0, 0, 0, 0);
 }
