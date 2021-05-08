@@ -13,8 +13,6 @@ public:
     ~Gui();
 
 private:
-    transfer_matrix_t H;
-
     static void on_change(Fl_Widget *o, void *v);
 };
 
