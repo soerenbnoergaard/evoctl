@@ -13,7 +13,7 @@ Completed:
 - Basic GUI implemented as a transfer matrix allowing the user to set the volume from any source to any destination.
 - USB control implemented and working.
 
-Still missing
+Still missing:
 - As this program detaches the kernel driver, it is not possibly to use alongside Jack yet. I am hoping to fix this major limitation as soon as possible.
 
 ## Screenshot
