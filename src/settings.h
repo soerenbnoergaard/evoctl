@@ -1,6 +1,8 @@
 #ifndef SETTINGS_H
 #define SETTINGS_H
 
+#include <cstdint>
+
 #define NUM_INPUTS 10
 #define NUM_OUTPUTS 4
 
@@ -20,6 +22,6 @@
 #define OUTPUT3 2
 #define OUTPUT4 3
 
-typedef struct { uint16_t values[NUM_OUTPUTS][NUM_INPUTS]; } transfer_matrix_t;
+typedef struct { int values[NUM_OUTPUTS][NUM_INPUTS]; } transfer_matrix_t;
 
 #endif

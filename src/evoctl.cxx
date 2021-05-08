@@ -1,11 +1,14 @@
 #include "evoctl.h"
 #include <FL/Fl_Box.H>
 #include <FL/Fl_Table.H>
+#include <FL/Fl_Int_Input.H>
 #include <FL/fl_draw.H>
 
 class TransferMatrixTable : public Fl_Table
 {
     transfer_matrix_t H;
+    Fl_Int_Input *input;
+    int row_edit, col_edit;
 
     void DrawHeader(const char *s, int X, int Y, int W, int H)
     {
@@ -30,7 +33,6 @@ class TransferMatrixTable : public Fl_Table
         static char s[40];
         switch (context) {
         case CONTEXT_STARTPAGE:
-            fl_font(FL_HELVETICA, 12);
             return;
 
         case CONTEXT_COL_HEADER:
@@ -75,9 +77,129 @@ class TransferMatrixTable : public Fl_Table
         }
     }
 
+    void set_value_hide()
+    {
+        int v = atoi(input->value());
+        if (v > 0) {
+            v = 0;
+        }
+        if (v < -100) {
+            v = -100;
+        }
+
+        this->H.values[row_edit][col_edit] = v;
+        input->hide();
+        window()->cursor(FL_CURSOR_DEFAULT);
+    }
+
+    void start_editing(int R, int C)
+    {
+        int X, Y, W, H;
+        char s[30];
+
+        row_edit = R;
+        col_edit = C;
+
+        set_selection(R, C, R, C);
+        find_cell(CONTEXT_CELL, R, C, X, Y, W, H);
+        input->resize(X, Y, W, H);
+        sprintf(s, "%d", this->H.values[R][C]);
+
+        input->value(s);
+        input->position(0,strlen(s));
+        input->show();
+        input->take_focus();
+    }
+
+    void done_editing()
+    {
+        if (input->visible()) {
+            set_value_hide();
+        }
+    }
+
+    void event_callback2()
+    {
+        int R = callback_row();
+        int C = callback_col();
+        TableContext context = callback_context(); 
+
+        switch (context) {
+        case CONTEXT_CELL: {
+            switch (Fl::event()) {
+            case FL_PUSH:
+                done_editing();
+                if (R != rows()-1 && C != cols()-1 )
+                    start_editing(R,C);
+                return;
+
+            case FL_KEYBOARD:
+                if ( Fl::event_key() == FL_Escape )
+                    exit(0);
+                done_editing();
+
+                if (C == cols()-1 || R == rows()-1)
+                    return;
+
+                switch (Fl::e_text[0]) {
+                case '0':
+                case '1':
+                case '2':
+                case '3':
+                case '4':
+                case '5':
+                case '6':
+                case '7':
+                case '8':
+                case '9':
+                case '+':
+                case '-':
+                    start_editing(R,C);
+                    input->handle(Fl::event());
+                    break;
+                case '\r':
+                case '\n':
+                    start_editing(R,C);
+                    break;
+                }
+                return;
+            }
+            return;
+        }
+
+        case CONTEXT_TABLE:
+        case CONTEXT_ROW_HEADER:
+        case CONTEXT_COL_HEADER:
+            done_editing();
+            return;
+
+        default:
+            return;
+        }
+    }
+
+    static void event_callback(Fl_Widget*,void *v)
+    {
+        ((TransferMatrixTable*)v)->event_callback2();
+    }
+
+    static void input_cb(Fl_Widget*,void* v)
+    {
+        ((TransferMatrixTable*)v)->set_value_hide();
+    }
+
+
 public:
     TransferMatrixTable(transfer_matrix_t transfer_matrix, int X, int Y, int W, int H, const char *L=0) : Fl_Table(X,Y,W,H,L)
     {
+        callback(&event_callback, (void*)this);
+        when(FL_WHEN_NOT_CHANGED|when());
+
+        input = new Fl_Int_Input(W/2,H/2,0,0);
+        input->hide();
+        input->callback(input_cb, (void*)this);
+        input->when(FL_WHEN_ENTER_KEY_ALWAYS);
+
         this->H = transfer_matrix;
 
         rows(NUM_OUTPUTS);
@@ -102,7 +224,15 @@ Gui::Gui()
     Fl_Window *window = new Fl_Window(W, H, "evoctl");
     window->begin();
 
-    Fl_Table *t = new TransferMatrixTable(this->H, 10, 30, W-20, H-40, "Transfer matrix");
+    for (int i = 0; i < NUM_OUTPUTS; i++) {
+        for (int j = 0; j < NUM_INPUTS; j++) {
+            this->H.values[i][j] = -100;
+        }
+    }
+    this->H.values[OUTPUT1][INPUT_DAW1] = 0;
+    this->H.values[OUTPUT2][INPUT_DAW2] = 0;
+
+    new TransferMatrixTable(this->H, 10, 30, W-20, H-40, "Transfer matrix");
 
     window->end();
     window->show();
