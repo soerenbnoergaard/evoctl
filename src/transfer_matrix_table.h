@@ -12,6 +12,7 @@ private:
     transfer_matrix_t H;
     Fl_Int_Input *input;
     int row_edit, col_edit;
+    void (*callback_value_changed)(transfer_matrix_t);
 
     void draw_header(const char *s, int X, int Y, int W, int H);
     void draw_data(const char *s, int X, int Y, int W, int H);
@@ -26,6 +27,7 @@ private:
 public:
     TransferMatrixTable(int X, int Y, int W, int H, const char *L=0);
     ~TransferMatrixTable() { }
+    void set_callback_value_changed(void (*f)(transfer_matrix_t)) { this->callback_value_changed = f; };
 };
 
 #endif

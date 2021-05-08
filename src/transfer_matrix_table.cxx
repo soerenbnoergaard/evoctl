@@ -78,8 +78,13 @@ void TransferMatrixTable::set_value_hide()
     }
 
     this->H.values[row_edit][col_edit] = v;
+
     input->hide();
     window()->cursor(FL_CURSOR_DEFAULT);
+
+    if (this->callback_value_changed != nullptr) {
+        (*this->callback_value_changed)(this->H);
+    }
 }
 
 void TransferMatrixTable::start_editing(int R, int C)
@@ -182,6 +187,8 @@ TransferMatrixTable::TransferMatrixTable(int X, int Y, int W, int H, const char 
     this->H.values[OUTPUT4][INPUT_DAW2] = 0;
 
     // Set up callbacks
+    callback_value_changed = nullptr;
+
     callback(&event_callback, (void*)this);
     when(FL_WHEN_NOT_CHANGED|when());
 

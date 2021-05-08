@@ -1,5 +1,17 @@
 #include "evoctl.h"
+#include "settings.h"
 #include "transfer_matrix_table.h"
+
+void evo_update(transfer_matrix_t H)
+{
+    for (int i = 0; i < NUM_OUTPUTS; i++) {
+        for (int j = 0; j < NUM_INPUTS; j++) {
+            printf("%5d ", H.values[i][j]);
+        }
+        printf("\n");
+    }
+    printf("\n");
+}
 
 Gui::Gui()
 {
@@ -9,7 +21,8 @@ Gui::Gui()
     Fl_Window *window = new Fl_Window(W, H, "evoctl");
     window->begin();
 
-    new TransferMatrixTable(10, 30, W-20, H-40, "Transfer matrix");
+    TransferMatrixTable *t = new TransferMatrixTable(10, 30, W-20, H-40, "Transfer matrix");
+    t->set_callback_value_changed(evo_update);
 
     window->end();
     window->show();
