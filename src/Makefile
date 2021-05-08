@@ -6,10 +6,11 @@ ifeq '$(OS)' "Windows_NT"
 EXEEXT = .exe
 endif
 
+LIBUSBFLAGS  = -I/usr/include/libusb-1.0 -lusb-1.0 
 FLTKCONFIG   = ../fltk/fltk-config
 CXX          = $(shell $(FLTKCONFIG) --cxx)
-CXXFLAGS     = $(shell $(FLTKCONFIG) --cxxflags) -Wall -I.
-LINKFLTK     = $(shell $(FLTKCONFIG) --ldstaticflags)
+CXXFLAGS     = $(shell $(FLTKCONFIG) --cxxflags) -Wall -I. $(LIBUSBFLAGS)
+LINKFLTK     = $(shell $(FLTKCONFIG) --ldstaticflags) $(LIBUSBFLAGS)
 LINKFLTK_GL  = $(shell $(FLTKCONFIG) --use-gl --ldstaticflags)
 LINKFLTK_IMG = $(shell $(FLTKCONFIG) --use-images --ldstaticflags)
 LINKFLTK_ALL = $(shell $(FLTKCONFIG) --use-images --use-gl --ldstaticflags)
