@@ -1,6 +1,7 @@
 #ifndef EVOCTL_H
 #define EVOCTL_H
 
+#include <cstdint>
 #include "settings.h"
 #include "guielements.h"
 
@@ -34,14 +35,9 @@ class Gui
 public:
     Gui();
     ~Gui();
-    void update(Settings s);
-    Settings get_settings() { return this->settings; };
-    Settings get_settings_from_gui();
 
 private:
-    Mix<VolumeFader *, PanDial *> out12;
-    Mix<VolumeFader *, PanDial *> out34;
-    Settings settings;
+    transfer_matrix_t H;
 
     static void on_change(Fl_Widget *o, void *v);
 };

@@ -1,264 +1,115 @@
 #include "evoctl.h"
 #include <FL/Fl_Box.H>
+#include <FL/Fl_Table.H>
+#include <FL/fl_draw.H>
+
+class TransferMatrixTable : public Fl_Table
+{
+    transfer_matrix_t H;
+
+    void DrawHeader(const char *s, int X, int Y, int W, int H)
+    {
+        fl_push_clip(X,Y,W,H);
+        fl_draw_box(FL_THIN_UP_BOX, X,Y,W,H, row_header_color());
+        fl_color(FL_BLACK);
+        fl_draw(s, X,Y,W,H, FL_ALIGN_CENTER);
+        fl_pop_clip();
+    } 
+
+    void DrawData(const char *s, int X, int Y, int W, int H)
+    {
+        fl_push_clip(X,Y,W,H);
+        fl_color(FL_WHITE); fl_rectf(X,Y,W,H);
+        fl_color(FL_GRAY0); fl_draw(s, X,Y,W,H, FL_ALIGN_CENTER);
+        fl_color(color()); fl_rect(X,Y,W,H);
+        fl_pop_clip();
+    } 
+
+    void draw_cell(TableContext context, int ROW=0, int COL=0, int X=0, int Y=0, int W=0, int H=0)
+    {
+        static char s[40];
+        switch (context) {
+        case CONTEXT_STARTPAGE:
+            fl_font(FL_HELVETICA, 12);
+            return;
+
+        case CONTEXT_COL_HEADER:
+            switch (COL) {
+            case INPUT_MIC1:      sprintf(s, "MIC1"); break;
+            case INPUT_MIC2:      sprintf(s, "MIC2"); break;
+            case INPUT_MIC3:      sprintf(s, "MIC3"); break;
+            case INPUT_MIC4:      sprintf(s, "MIC4"); break;
+            case INPUT_DAW1:      sprintf(s, "DAW1"); break;
+            case INPUT_DAW2:      sprintf(s, "DAW2"); break;
+            case INPUT_DAW3:      sprintf(s, "DAW3"); break;
+            case INPUT_DAW4:      sprintf(s, "DAW4"); break;
+            case INPUT_LOOPBACK1: sprintf(s, "LB1"); break;
+            case INPUT_LOOPBACK2: sprintf(s, "LB2"); break;
+            default:              s[0] = '\0'; break;
+            }
+
+            DrawHeader(s,X,Y,W,H);
+
+            return; 
+
+        case CONTEXT_ROW_HEADER:
+            switch (ROW) {
+            case OUTPUT1: sprintf(s, "OUT1"); break;
+            case OUTPUT2: sprintf(s, "OUT2"); break;
+            case OUTPUT3: sprintf(s, "OUT3"); break;
+            case OUTPUT4: sprintf(s, "OUT4"); break;
+            default:              s[0] = '\0'; break;
+            }
+
+            DrawHeader(s,X,Y,W,H);
+
+            return;
+
+        case CONTEXT_CELL:
+            sprintf(s,"%d", this->H.values[ROW][COL]);
+            DrawData(s,X,Y,W,H);
+            return;
+
+        default:
+            return;
+        }
+    }
+
+public:
+    TransferMatrixTable(transfer_matrix_t transfer_matrix, int X, int Y, int W, int H, const char *L=0) : Fl_Table(X,Y,W,H,L)
+    {
+        this->H = transfer_matrix;
+
+        rows(NUM_OUTPUTS);
+        row_header(1);
+        row_height_all(20);
+        row_resize(0);
+
+        cols(NUM_INPUTS);
+        col_header(1);
+        col_width_all(80);
+        col_resize(1);
+        end();
+    }
+    ~TransferMatrixTable() { }
+};
 
 Gui::Gui()
 {
-    int W = 640;
-    int H = 640;
+    int W = 80*(NUM_INPUTS+1);
+    int H = 20*(NUM_OUTPUTS+1) + 40;
 
     Fl_Window *window = new Fl_Window(W, H, "evoctl");
     window->begin();
 
-    int x, y, m, b, h, w;
+    Fl_Table *t = new TransferMatrixTable(this->H, 10, 30, W-20, H-40, "Transfer matrix");
 
-    m = 80;
-    b = 10;
-
-    w = 40;
-    h = 20;
-
-    x = 0;
-    y = 40;
-
-    new TextBoxCenter(b + m*x++, y, w, h, "MIC 1");
-    new TextBoxCenter(b + m*x++, y, w, h, "MIC 2");
-    new TextBoxCenter(b + m*x++, y, w, h, "MIC 3");
-    new TextBoxCenter(b + m*x++, y, w, h, "MIC 4");
-    new TextBoxCenter(b + m*x++, y, w, h, "DAW 1");
-    new TextBoxCenter(b + m*x++, y, w, h, "DAW 2");
-    new TextBoxCenter(b + m*x++, y, w, h, "DAW 3");
-    new TextBoxCenter(b + m*x++, y, w, h, "DAW 4");
-
-    new TextBoxLeft(b, 70, w, h,  "OUTPUT 1 + 2");
-
-    x = 0;
-    y = 100;
-    this->out12.mic1.pan_percent = new PanDial(b + m*x++, y, on_change, this);
-    this->out12.mic2.pan_percent = new PanDial(b + m*x++, y, on_change, this);
-    this->out12.mic3.pan_percent = new PanDial(b + m*x++, y, on_change, this);
-    this->out12.mic4.pan_percent = new PanDial(b + m*x++, y, on_change, this);
-    this->out12.daw1.pan_percent = new PanDial(b + m*x++, y, on_change, this);
-    this->out12.daw2.pan_percent = new PanDial(b + m*x++, y, on_change, this);
-    this->out12.daw3.pan_percent = new PanDial(b + m*x++, y, on_change, this);
-    this->out12.daw4.pan_percent = new PanDial(b + m*x++, y, on_change, this);
-
-    x = 0;
-    y = 170;
-    this->out12.mic1.volume_dB = new VolumeFader(b + m*x++, y, on_change, this);
-    this->out12.mic2.volume_dB = new VolumeFader(b + m*x++, y, on_change, this);
-    this->out12.mic3.volume_dB = new VolumeFader(b + m*x++, y, on_change, this);
-    this->out12.mic4.volume_dB = new VolumeFader(b + m*x++, y, on_change, this);
-    this->out12.daw1.volume_dB = new VolumeFader(b + m*x++, y, on_change, this);
-    this->out12.daw2.volume_dB = new VolumeFader(b + m*x++, y, on_change, this);
-    this->out12.daw3.volume_dB = new VolumeFader(b + m*x++, y, on_change, this);
-    this->out12.daw4.volume_dB = new VolumeFader(b + m*x++, y, on_change, this);
-
-    new TextBoxLeft(b, 350, w, h,  "OUTPUT 3 + 4");
-
-    x = 0;
-    y = 380;
-    this->out34.mic1.pan_percent = new PanDial(b + m*x++, y, on_change, this);
-    this->out34.mic2.pan_percent = new PanDial(b + m*x++, y, on_change, this);
-    this->out34.mic3.pan_percent = new PanDial(b + m*x++, y, on_change, this);
-    this->out34.mic4.pan_percent = new PanDial(b + m*x++, y, on_change, this);
-    this->out34.daw1.pan_percent = new PanDial(b + m*x++, y, on_change, this);
-    this->out34.daw2.pan_percent = new PanDial(b + m*x++, y, on_change, this);
-    this->out34.daw3.pan_percent = new PanDial(b + m*x++, y, on_change, this);
-    this->out34.daw4.pan_percent = new PanDial(b + m*x++, y, on_change, this);
-
-    x = 0;
-    y = 450;
-    this->out34.mic1.volume_dB = new VolumeFader(b + m*x++, y, on_change, this);
-    this->out34.mic2.volume_dB = new VolumeFader(b + m*x++, y, on_change, this);
-    this->out34.mic3.volume_dB = new VolumeFader(b + m*x++, y, on_change, this);
-    this->out34.mic4.volume_dB = new VolumeFader(b + m*x++, y, on_change, this);
-    this->out34.daw1.volume_dB = new VolumeFader(b + m*x++, y, on_change, this);
-    this->out34.daw2.volume_dB = new VolumeFader(b + m*x++, y, on_change, this);
-    this->out34.daw3.volume_dB = new VolumeFader(b + m*x++, y, on_change, this);
-    this->out34.daw4.volume_dB = new VolumeFader(b + m*x++, y, on_change, this);
-
-    this->update(this->settings);
     window->end();
     window->show();
 }
 
 Gui::~Gui()
 {
-}
-
-void Gui::update(Settings s)
-{
-    this->out12.mic1.volume_dB->value(s.out12.mic1.volume_dB);
-    this->out12.mic2.volume_dB->value(s.out12.mic2.volume_dB);
-    this->out12.mic3.volume_dB->value(s.out12.mic3.volume_dB);
-    this->out12.mic4.volume_dB->value(s.out12.mic4.volume_dB);
-    this->out12.daw1.volume_dB->value(s.out12.daw1.volume_dB);
-    this->out12.daw2.volume_dB->value(s.out12.daw2.volume_dB);
-    this->out12.daw3.volume_dB->value(s.out12.daw3.volume_dB);
-    this->out12.daw4.volume_dB->value(s.out12.daw4.volume_dB);
-
-    this->out34.mic1.volume_dB->value(s.out34.mic1.volume_dB);
-    this->out34.mic2.volume_dB->value(s.out34.mic2.volume_dB);
-    this->out34.mic3.volume_dB->value(s.out34.mic3.volume_dB);
-    this->out34.mic4.volume_dB->value(s.out34.mic4.volume_dB);
-    this->out34.daw1.volume_dB->value(s.out34.daw1.volume_dB);
-    this->out34.daw2.volume_dB->value(s.out34.daw2.volume_dB);
-    this->out34.daw3.volume_dB->value(s.out34.daw3.volume_dB);
-    this->out34.daw4.volume_dB->value(s.out34.daw4.volume_dB);
-
-    this->out12.mic1.pan_percent->value(s.out12.mic1.pan_percent);
-    this->out12.mic2.pan_percent->value(s.out12.mic2.pan_percent);
-    this->out12.mic3.pan_percent->value(s.out12.mic3.pan_percent);
-    this->out12.mic4.pan_percent->value(s.out12.mic4.pan_percent);
-    this->out12.daw1.pan_percent->value(s.out12.daw1.pan_percent);
-    this->out12.daw2.pan_percent->value(s.out12.daw2.pan_percent);
-    this->out12.daw3.pan_percent->value(s.out12.daw3.pan_percent);
-    this->out12.daw4.pan_percent->value(s.out12.daw4.pan_percent);
-
-    this->out34.mic1.pan_percent->value(s.out34.mic1.pan_percent);
-    this->out34.mic2.pan_percent->value(s.out34.mic2.pan_percent);
-    this->out34.mic3.pan_percent->value(s.out34.mic3.pan_percent);
-    this->out34.mic4.pan_percent->value(s.out34.mic4.pan_percent);
-    this->out34.daw1.pan_percent->value(s.out34.daw1.pan_percent);
-    this->out34.daw2.pan_percent->value(s.out34.daw2.pan_percent);
-    this->out34.daw3.pan_percent->value(s.out34.daw3.pan_percent);
-    this->out34.daw4.pan_percent->value(s.out34.daw4.pan_percent);
-
-    this->settings = s;
-}
-
-Settings Gui::get_settings_from_gui()
-{
-    Settings s;
-
-    s.out12.mic1.volume_dB = this->out12.mic1.volume_dB->value();
-    s.out12.mic2.volume_dB = this->out12.mic2.volume_dB->value();
-    s.out12.mic3.volume_dB = this->out12.mic3.volume_dB->value();
-    s.out12.mic4.volume_dB = this->out12.mic4.volume_dB->value();
-    s.out12.daw1.volume_dB = this->out12.daw1.volume_dB->value();
-    s.out12.daw2.volume_dB = this->out12.daw2.volume_dB->value();
-    s.out12.daw3.volume_dB = this->out12.daw3.volume_dB->value();
-    s.out12.daw4.volume_dB = this->out12.daw4.volume_dB->value();
-
-    s.out34.mic1.volume_dB = this->out34.mic1.volume_dB->value();
-    s.out34.mic2.volume_dB = this->out34.mic2.volume_dB->value();
-    s.out34.mic3.volume_dB = this->out34.mic3.volume_dB->value();
-    s.out34.mic4.volume_dB = this->out34.mic4.volume_dB->value();
-    s.out34.daw1.volume_dB = this->out34.daw1.volume_dB->value();
-    s.out34.daw2.volume_dB = this->out34.daw2.volume_dB->value();
-    s.out34.daw3.volume_dB = this->out34.daw3.volume_dB->value();
-    s.out34.daw4.volume_dB = this->out34.daw4.volume_dB->value();
-
-    s.out12.mic1.pan_percent = this->out12.mic1.pan_percent->value();
-    s.out12.mic2.pan_percent = this->out12.mic2.pan_percent->value();
-    s.out12.mic3.pan_percent = this->out12.mic3.pan_percent->value();
-    s.out12.mic4.pan_percent = this->out12.mic4.pan_percent->value();
-    s.out12.daw1.pan_percent = this->out12.daw1.pan_percent->value();
-    s.out12.daw2.pan_percent = this->out12.daw2.pan_percent->value();
-    s.out12.daw3.pan_percent = this->out12.daw3.pan_percent->value();
-    s.out12.daw4.pan_percent = this->out12.daw4.pan_percent->value();
-
-    s.out34.mic1.pan_percent = this->out34.mic1.pan_percent->value();
-    s.out34.mic2.pan_percent = this->out34.mic2.pan_percent->value();
-    s.out34.mic3.pan_percent = this->out34.mic3.pan_percent->value();
-    s.out34.mic4.pan_percent = this->out34.mic4.pan_percent->value();
-    s.out34.daw1.pan_percent = this->out34.daw1.pan_percent->value();
-    s.out34.daw2.pan_percent = this->out34.daw2.pan_percent->value();
-    s.out34.daw3.pan_percent = this->out34.daw3.pan_percent->value();
-    s.out34.daw4.pan_percent = this->out34.daw4.pan_percent->value();
-
-    return s;
-}
-
-void Gui::on_change(Fl_Widget *o, void *v)
-{
-    // Type cast arguments
-    Fl_Valuator *as_valuator = (Fl_Valuator *)o;
-    Gui *gui = (Gui *)v;
-
-    // Update GUI labels
-    char *buffer = new char[16];
-    snprintf(buffer, 16, "%.0f", as_valuator->value());
-    as_valuator->label(buffer);
-
-    // Settings s = gui->get_settings();
-
-    if (o == nullptr) {
-    }
-    else if (o == gui->out12.mic1.volume_dB) {
-    }
-    else if (o == gui->out12.mic2.volume_dB) {
-    }
-    else if (o == gui->out12.mic3.volume_dB) {
-    }
-    else if (o == gui->out12.mic4.volume_dB) {
-    }
-    else if (o == gui->out12.daw1.volume_dB) {
-        gui->out12.daw2.volume_dB->value(gui->out12.daw1.volume_dB->value());
-    }
-    else if (o == gui->out12.daw2.volume_dB) {
-        gui->out12.daw1.volume_dB->value(gui->out12.daw2.volume_dB->value());
-    }
-    else if (o == gui->out12.daw3.volume_dB) {
-        gui->out12.daw4.volume_dB->value(gui->out12.daw3.volume_dB->value());
-    }
-    else if (o == gui->out12.daw4.volume_dB) {
-        gui->out12.daw3.volume_dB->value(gui->out12.daw4.volume_dB->value());
-    }
-    else if (o == gui->out34.mic1.volume_dB) {
-    }
-    else if (o == gui->out34.mic2.volume_dB) {
-    }
-    else if (o == gui->out34.mic3.volume_dB) {
-    }
-    else if (o == gui->out34.mic4.volume_dB) {
-    }
-    else if (o == gui->out34.daw1.volume_dB) {
-        gui->out34.daw2.volume_dB->value(gui->out34.daw1.volume_dB->value());
-    }
-    else if (o == gui->out34.daw2.volume_dB) {
-        gui->out34.daw1.volume_dB->value(gui->out34.daw2.volume_dB->value());
-    }
-    else if (o == gui->out34.daw3.volume_dB) {
-        gui->out34.daw4.volume_dB->value(gui->out34.daw3.volume_dB->value());
-    }
-    else if (o == gui->out34.daw4.volume_dB) {
-        gui->out34.daw3.volume_dB->value(gui->out34.daw4.volume_dB->value());
-    }
-    else if (o == gui->out12.mic1.pan_percent) {
-    }
-    else if (o == gui->out12.mic2.pan_percent) {
-    }
-    else if (o == gui->out12.mic3.pan_percent) {
-    }
-    else if (o == gui->out12.mic4.pan_percent) {
-    }
-    else if (o == gui->out12.daw1.pan_percent) {
-    }
-    else if (o == gui->out12.daw2.pan_percent) {
-    }
-    else if (o == gui->out12.daw3.pan_percent) {
-    }
-    else if (o == gui->out12.daw4.pan_percent) {
-    }
-    else if (o == gui->out34.mic1.pan_percent) {
-    }
-    else if (o == gui->out34.mic2.pan_percent) {
-    }
-    else if (o == gui->out34.mic3.pan_percent) {
-    }
-    else if (o == gui->out34.mic4.pan_percent) {
-    }
-    else if (o == gui->out34.daw1.pan_percent) {
-    }
-    else if (o == gui->out34.daw2.pan_percent) {
-    }
-    else if (o == gui->out34.daw3.pan_percent) {
-    }
-    else if (o == gui->out34.daw4.pan_percent) {
-    }
-
-    // gui->update(s);
 }
 
 int main()

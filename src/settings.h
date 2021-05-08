@@ -1,74 +1,25 @@
 #ifndef SETTINGS_H
 #define SETTINGS_H
 
-const double volume_silence_dB = -60.0;
-const double pan_left_percent = -100.0;
-const double pan_rignt_percent = 100.0;
+#define NUM_INPUTS 10
+#define NUM_OUTPUTS 4
 
-template <typename T0, typename T1>
-struct Source
-{
-    T0 volume_dB;
-    T1 pan_percent;
-};
+#define INPUT_MIC1 0
+#define INPUT_MIC2 1
+#define INPUT_MIC3 2
+#define INPUT_MIC4 3
+#define INPUT_DAW1 4
+#define INPUT_DAW2 5
+#define INPUT_DAW3 6
+#define INPUT_DAW4 7
+#define INPUT_LOOPBACK1 8
+#define INPUT_LOOPBACK2 9
 
-template <typename T0, typename T1>
-struct Mix
-{
-    Source<T0, T1> mic1;
-    Source<T0, T1> mic2;
-    Source<T0, T1> mic3;
-    Source<T0, T1> mic4;
+#define OUTPUT1 0
+#define OUTPUT2 1
+#define OUTPUT3 2
+#define OUTPUT4 3
 
-    Source<T0, T1> daw1;
-    Source<T0, T1> daw2;
-    Source<T0, T1> daw3;
-    Source<T0, T1> daw4;
-};
-
-struct Settings
-{
-    Settings()
-    {
-        out12.mic1.volume_dB = volume_silence_dB;
-        out12.mic2.volume_dB = volume_silence_dB;
-        out12.mic3.volume_dB = volume_silence_dB;
-        out12.mic4.volume_dB = volume_silence_dB;
-        out12.daw1.volume_dB = 0.0;
-        out12.daw2.volume_dB = 0.0;
-        out12.daw3.volume_dB = volume_silence_dB;
-        out12.daw4.volume_dB = volume_silence_dB;
-
-        out34.mic1.volume_dB = volume_silence_dB;
-        out34.mic2.volume_dB = volume_silence_dB;
-        out34.mic3.volume_dB = volume_silence_dB;
-        out34.mic4.volume_dB = volume_silence_dB;
-        out34.daw1.volume_dB = volume_silence_dB;
-        out34.daw2.volume_dB = volume_silence_dB;
-        out34.daw3.volume_dB = 0.0;
-        out34.daw4.volume_dB = 0.0;
-
-        out12.mic1.pan_percent = 0.0;
-        out12.mic2.pan_percent = 0.0;
-        out12.mic3.pan_percent = 0.0;
-        out12.mic4.pan_percent = 0.0;
-        out12.daw1.pan_percent = pan_left_percent;
-        out12.daw2.pan_percent = pan_rignt_percent;
-        out12.daw3.pan_percent = pan_left_percent;
-        out12.daw4.pan_percent = pan_rignt_percent;
-
-        out34.mic1.pan_percent = 0.0;
-        out34.mic2.pan_percent = 0.0;
-        out34.mic3.pan_percent = 0.0;
-        out34.mic4.pan_percent = 0.0;
-        out34.daw1.pan_percent = pan_left_percent;
-        out34.daw2.pan_percent = pan_rignt_percent;
-        out34.daw3.pan_percent = pan_left_percent;
-        out34.daw4.pan_percent = pan_rignt_percent;
-    }
-
-    Mix<double, double> out12;
-    Mix<double, double> out34;
-};
+typedef struct { uint16_t values[NUM_OUTPUTS][NUM_INPUTS]; } transfer_matrix_t;
 
 #endif
