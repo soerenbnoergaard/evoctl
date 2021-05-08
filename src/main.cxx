@@ -1,6 +1,8 @@
-#include "evoctl.h"
 #include "settings.h"
 #include "transfer_matrix_table.h"
+
+#include <FL/Fl.H>
+#include <FL/Fl_Window.H>
 
 void evo_update(transfer_matrix_t H)
 {
@@ -13,7 +15,7 @@ void evo_update(transfer_matrix_t H)
     printf("\n");
 }
 
-Gui::Gui()
+int main()
 {
     int W = 80*(NUM_INPUTS+1);
     int H = 20*(NUM_OUTPUTS+1) + 40;
@@ -26,14 +28,6 @@ Gui::Gui()
 
     window->end();
     window->show();
-}
 
-Gui::~Gui()
-{
-}
-
-int main()
-{
-    new Gui();
     return Fl::run();
 }
