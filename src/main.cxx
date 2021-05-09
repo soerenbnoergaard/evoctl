@@ -1,5 +1,3 @@
-#include <cmath>
-
 #include <FL/Fl.H>
 #include <FL/Fl_Window.H>
 #include <FL/Fl_Widget.H>
@@ -50,6 +48,7 @@ void evo_init()
 
 void evo_close()
 {
+    libusb_reset_device(devh);
     libusb_release_interface(devh, 0);
     libusb_close(devh);
     libusb_exit(NULL);

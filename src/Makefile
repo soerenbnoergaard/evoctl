@@ -1,5 +1,7 @@
 TARGET = evoctl$(EXEEXT)
-SOURCES = main.cxx transfer_matrix_table.cxx
+SOURCES = main.cxx
+# SOURCES = main_debug.cxx
+SOURCES += transfer_matrix_table.cxx
 OBJECTS = $(SOURCES:.cxx=.o)
 
 ifeq '$(OS)' "Windows_NT"

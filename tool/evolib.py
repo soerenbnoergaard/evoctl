@@ -73,10 +73,10 @@ class AudientEvo8(AudientEvo):
 def main():
     dev = AudientEvo8()
 
-    import pdb; pdb.set_trace()
+    # import pdb; pdb.set_trace()
 
     # Headphone Volume. 2nd byte in data is volume level from 0x00 to 0xff
-    # dev.write(wValue=0x0000, wIndex=0x3b00, data=[0x00, 0xf0, 0xff, 0xff])
+    dev.write(wValue=0x0000, wIndex=0x3b00, data=[0x00, 0xf0, 0xff, 0xff])
 
     # 48V (channel 1). First byte is 0x01 or 0x00 for on or off
     # dev.write(wValue=0x0000, wIndex=0x3a00, data=[0x01, 0x00, 0x00, 0x00])
