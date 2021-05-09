@@ -179,8 +179,8 @@ TransferMatrixTable::TransferMatrixTable(int X, int Y, int W, int H, const char 
     }
     this->H.values[OUTPUT1][INPUT_DAW1] = 0;
     this->H.values[OUTPUT2][INPUT_DAW2] = 0;
-    this->H.values[OUTPUT3][INPUT_DAW1] = 0;
-    this->H.values[OUTPUT4][INPUT_DAW2] = 0;
+    this->H.values[OUTPUT3][INPUT_DAW3] = 0;
+    this->H.values[OUTPUT4][INPUT_DAW4] = 0;
 
     // Set up callbacks
     callback_value_changed = nullptr;

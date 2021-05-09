@@ -13,7 +13,6 @@
 #define EVO_8_PRODUCT_ID 0x0007
 
 static libusb_device_handle *devh = NULL;
-static bool devh_reattach = false;
 
 void evo_init()
 {
@@ -56,21 +55,25 @@ void evo_close()
     libusb_exit(NULL);
 }
 
-void evo_ctrl_volume(int wValue, int wIndex, int32_t v)
+void evo_ctrl_volume(int wValue, int wIndex, int32_t volume_dB)
 {
     // Volume mapping:
-    // - Minimum = 0x0080 = 128
-    // - Maximum = 0xefff = 61439 = +6 dB
-    // Theory: The format is in dB (fixed-point Q8.8?)
+    // It looks like little endian Q8.8 encoded dB values.
+    // - Minimum = 0x0080 = 128 = -128 dB
+    // - Maximum = 0xefff = 61439 = -0.066 dB
 
-    uint8_t bytes[2];
-    if (v <= -100) {
-        bytes[1] = 0x80;
-        bytes[0] = 0x00;
-    } else {
-        bytes[1] = v;
-        bytes[0] = v/0xff;
+    if (volume_dB <= -100) {
+        volume_dB = -128;
+    } else if (volume_dB > 0) {
+        volume_dB = 0;
     }
+
+    uint16_t v = (uint16_t)(256 * volume_dB);
+    uint8_t bytes[2];
+
+    bytes[1] = (v >> 8) & 0xff;
+    bytes[0] = (v     ) & 0xff;
+
     libusb_control_transfer(devh, 0x21, 0x01, wValue, wIndex, bytes, 2, 0);
 }
 
