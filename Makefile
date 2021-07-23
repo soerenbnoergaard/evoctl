@@ -1,6 +1,6 @@
 .PHONY: all clean cleanall
 
-all: 
+all:
 	make -C fltk all
 	make -C src
 
